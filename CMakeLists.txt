@@ -7,4 +7,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(ChessGame
     src/main.cpp
+    src/Knight.cpp
+    src/Board.cpp
+)
+
+target_include_directories(ChessGame
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/include
 )
