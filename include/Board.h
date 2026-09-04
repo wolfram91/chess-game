@@ -11,6 +11,8 @@ private:
 public:
     Board();
 
+    void setup();
+
     bool placePiece(
     std::unique_ptr<Piece> piece,
     Position position

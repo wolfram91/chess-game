@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "Knight.h"
 
 Board::Board() {
     for (int row = 0; row < 8; row++) {
@@ -81,4 +82,27 @@ bool Board::movePiece(
     );
 
     return true;
+}
+
+void Board::setup() {
+
+    placePiece(
+        std::make_unique<Knight>(Color::WHITE),
+        Position{0, 1}
+    );
+
+    placePiece(
+        std::make_unique<Knight>(Color::WHITE),
+        Position{0, 6}
+    );
+
+    placePiece(
+        std::make_unique<Knight>(Color::BLACK),
+        Position{7, 1}
+    );
+
+    placePiece(
+        std::make_unique<Knight>(Color::BLACK),
+        Position{7, 6}
+    );
 }
