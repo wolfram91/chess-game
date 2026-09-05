@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(ChessGame
     src/main.cpp
     src/Knight.cpp
+    src/Rook.cpp
+    src/Bishop.cpp
+    src/Queen.cpp
     src/Board.cpp
 )
 

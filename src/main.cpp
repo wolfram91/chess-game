@@ -1,28 +1,47 @@
 #include <iostream>
 
-#include "Board.h"
+#include "Queen.h"
 
 int main() {
 
-    Board board;
+    Queen queen(Color::WHITE);
 
-    board.setup();
+    std::cout << std::boolalpha;
 
-    if (board.getPiece(Position{0, 1}) != nullptr) {
-        std::cout << "White Knight found at (0,1)." << std::endl;
-    }
+    std::cout << "Queen (4,4) -> (4,7): "
+              << queen.isValidMovement(
+                    Position{4,4},
+                    Position{4,7}
+                 )
+              << std::endl;
 
-    if (board.getPiece(Position{0, 6}) != nullptr) {
-        std::cout << "White Knight found at (0,6)." << std::endl;
-    }
+    std::cout << "Queen (4,4) -> (7,4): "
+              << queen.isValidMovement(
+                    Position{4,4},
+                    Position{7,4}
+                 )
+              << std::endl;
 
-    if (board.getPiece(Position{7, 1}) != nullptr) {
-        std::cout << "Black Knight found at (7,1)." << std::endl;
-    }
+    std::cout << "Queen (4,4) -> (7,7): "
+              << queen.isValidMovement(
+                    Position{4,4},
+                    Position{7,7}
+                 )
+              << std::endl;
 
-    if (board.getPiece(Position{7, 6}) != nullptr) {
-        std::cout << "Black Knight found at (7,6)." << std::endl;
-    }
+    std::cout << "Queen (4,4) -> (6,5): "
+              << queen.isValidMovement(
+                    Position{4,4},
+                    Position{6,5}
+                 )
+              << std::endl;
+
+    std::cout << "Queen (4,4) -> (4,4): "
+              << queen.isValidMovement(
+                    Position{4,4},
+                    Position{4,4}
+                 )
+              << std::endl;
 
     return 0;
 }
