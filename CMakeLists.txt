@@ -15,6 +15,7 @@ add_executable(ChessGame
     src/Pawn.cpp
     src/Board.cpp
     src/MoveValidator.cpp
+    src/GameState.cpp
 )
 
 target_include_directories(ChessGame

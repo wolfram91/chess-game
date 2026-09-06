@@ -9,9 +9,9 @@ bool Pawn::isValidMovement(
     int direction;
 
     if (color == Color::WHITE) {
-        direction = -1;
-    } else {
         direction = 1;
+    } else {
+        direction = -1;
     }
 
     bool oneSquareMove =
@@ -34,9 +34,9 @@ bool Pawn::canCapture(
     int direction;
 
     if (color == Color::WHITE) {
-        direction = -1;
-    } else {
         direction = 1;
+    } else {
+        direction = -1;
     }
 
     int rowDifference = to.row - from.row;

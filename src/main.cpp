@@ -1,95 +1,58 @@
 #include <iostream>
-#include <memory>
 
-#include "Board.h"
+#include "GameState.h"
 #include "Move.h"
-#include "MoveValidator.h"
-#include "Pawn.h"
-#include "Rook.h"
 
 int main() {
 
+    GameState game;
+
     std::cout << std::boolalpha;
 
-    // --------------------------------
-    // Test 1: Clear two-square move
-    // --------------------------------
-
-    Board board1;
-
-    board1.placePiece(
-        std::make_unique<Pawn>(Color::WHITE),
-        Position{6, 3}
-    );
-
-    Move clearDoubleMove{
-        Position{6, 3},
-        Position{4, 3}
+    // White: e2 -> e4
+    Move whiteMove{
+        Position{1, 4},
+        Position{3, 4}
     };
 
-    std::cout << "Clear two-square pawn move: "
-              << MoveValidator::isValidMove(
-                     board1,
-                     clearDoubleMove
-                 )
+    bool whiteResult = game.makeMove(whiteMove);
+
+    std::cout << "White e2-e4: "
+              << whiteResult
+              << std::endl;
+
+    std::cout << "Black's turn: "
+              << (game.getCurrentTurn() == Color::BLACK)
               << std::endl;
 
 
-    // --------------------------------
-    // Test 2: Blocked two-square move
-    // --------------------------------
-
-    Board board2;
-
-    board2.placePiece(
-        std::make_unique<Pawn>(Color::WHITE),
-        Position{6, 3}
-    );
-
-    board2.placePiece(
-        std::make_unique<Rook>(Color::BLACK),
-        Position{5, 3}
-    );
-
-    Move blockedDoubleMove{
-        Position{6, 3},
-        Position{4, 3}
+    // Black: e7 -> e5
+    Move blackMove{
+        Position{6, 4},
+        Position{4, 4}
     };
 
-    std::cout << "Blocked two-square pawn move: "
-              << MoveValidator::isValidMove(
-                     board2,
-                     blockedDoubleMove
-                 )
+    bool blackResult = game.makeMove(blackMove);
+
+    std::cout << "Black e7-e5: "
+              << blackResult
+              << std::endl;
+
+    std::cout << "White's turn: "
+              << (game.getCurrentTurn() == Color::WHITE)
               << std::endl;
 
 
-    // --------------------------------
-    // Test 3: One-square blocked move
-    // --------------------------------
-
-    Board board3;
-
-    board3.placePiece(
-        std::make_unique<Pawn>(Color::WHITE),
-        Position{6, 3}
-    );
-
-    board3.placePiece(
-        std::make_unique<Rook>(Color::BLACK),
-        Position{5, 3}
-    );
-
-    Move blockedOneMove{
-        Position{6, 3},
-        Position{5, 3}
+    // Try Black again — should fail.
+    Move illegalTurnMove{
+        Position{4, 4},
+        Position{3, 4}
     };
 
-    std::cout << "Blocked one-square pawn move: "
-              << MoveValidator::isValidMove(
-                     board3,
-                     blockedOneMove
-                 )
+    bool illegalResult = game.makeMove(illegalTurnMove);
+
+    std::cout << "Black tries to move again: "
+              << illegalResult
               << std::endl;
 
     return 0;
