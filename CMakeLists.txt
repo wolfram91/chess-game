@@ -11,7 +11,10 @@ add_executable(ChessGame
     src/Rook.cpp
     src/Bishop.cpp
     src/Queen.cpp
+    src/King.cpp
+    src/Pawn.cpp
     src/Board.cpp
+    src/MoveValidator.cpp
 )
 
 target_include_directories(ChessGame

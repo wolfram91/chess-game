@@ -6,12 +6,16 @@
 class Knight : public Piece {
 public:
     Knight(Color color)
-    : Piece(color) {}
+        : Piece(color) {}
 
     bool isValidMovement(
         Position from,
         Position to
     ) const override;
+
+    bool canJump() const override {
+        return true;
+    }
 };
 
 #endif

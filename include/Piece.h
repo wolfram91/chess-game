@@ -17,6 +17,10 @@ public:
         Position to
     ) const = 0;
 
+    virtual bool canJump() const {
+        return false;
+    }
+
     Color getColor() const {
         return color;
     }
