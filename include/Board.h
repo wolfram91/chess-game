@@ -22,6 +22,8 @@ public:
 
     Piece* getPiece(Position position) const;
 
+    std::unique_ptr<Piece> takePiece(Position position);
+
     bool isEmpty(Position position) const;
 
     bool isValidPosition(Position position) const;

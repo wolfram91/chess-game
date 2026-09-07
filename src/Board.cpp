@@ -113,7 +113,7 @@ bool Board::executeMove(const Move& move) {
     }
 
     if (squares[to.row][to.col] != nullptr) {
-        squares[to.row][to.col].reset();
+        return false;
     }
 
     squares[to.row][to.col] = std::move(
@@ -223,4 +223,19 @@ void Board::setup() {
             Position{6, col}
         );
     }
+}
+
+std::unique_ptr<Piece> Board::takePiece(Position position) {
+
+    if (!isValidPosition(position)) {
+        return nullptr;
+    }
+
+    if (squares[position.row][position.col] == nullptr) {
+        return nullptr;
+    }
+
+    return std::move(
+        squares[position.row][position.col]
+    );
 }

@@ -5,11 +5,11 @@
 
 class Pawn : public Piece {
 private:
-    bool hasMoved;
+    bool hasMovedFlag;
 
 public:
     Pawn(Color color)
-    : Piece(color), hasMoved(false) {}
+        : Piece(color), hasMovedFlag(false) {}
 
     bool isValidMovement(
         Position from,
@@ -18,7 +18,17 @@ public:
 
     bool canCapture(
         Position from,
-        Position to) const;
+        Position to
+    ) const;
+
+    std::unique_ptr<PieceState> saveState() const override;
+
+    void onMove() override;
+
+    void restoreState(
+        const PieceState& state
+    ) override;
+
 };
 
 #endif

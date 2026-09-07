@@ -22,3 +22,21 @@ target_include_directories(ChessGame
     PRIVATE
         ${PROJECT_SOURCE_DIR}/include
 )
+
+add_executable(GameStateTest
+    tests/GameStateTest.cpp
+    src/Knight.cpp
+    src/Rook.cpp
+    src/Bishop.cpp
+    src/Queen.cpp
+    src/King.cpp
+    src/Pawn.cpp
+    src/Board.cpp
+    src/MoveValidator.cpp
+    src/GameState.cpp
+)
+
+target_include_directories(GameStateTest
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/include
+)

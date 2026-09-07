@@ -1,4 +1,6 @@
 #include "King.h"
+#include "KingState.h"
+
 #include <cstdlib>
 
 bool King::isValidMovement(
@@ -16,4 +18,21 @@ bool King::isValidMovement(
 
     return rowDifference <= 1 &&
            colDifference <= 1;
+}
+
+void King::onMove() {
+    hasMovedFlag = true;
+}
+
+std::unique_ptr<PieceState> King::saveState() const {
+    return std::make_unique<KingState>(hasMovedFlag);
+}
+
+void King::restoreState(
+    const PieceState& state
+) {
+    const KingState& kingState =
+        static_cast<const KingState&>(state);
+
+    hasMovedFlag = kingState.hasMoved;
 }

@@ -1,6 +1,9 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+#include <memory>
+
+#include "PieceState.h"
 #include "Color.h"
 #include "Position.h"
 
@@ -20,6 +23,16 @@ public:
     virtual bool canJump() const {
         return false;
     }
+
+    virtual void onMove() {}
+
+    virtual std::unique_ptr<PieceState> saveState() const {
+    return nullptr;
+    }
+
+    virtual void restoreState(
+        const PieceState& state
+    ) {}
 
     Color getColor() const {
         return color;
