@@ -107,6 +107,78 @@ bool GameState::makeMove(const Move& move) {
     // Tell the piece that its move was successful.
     piece->onMove();
 
+    if (MoveValidator::isKingInCheck(
+            board,
+            currentTurn)) {
+
+        // Undo the primary piece movement
+        std::unique_ptr<Piece> movedPiece =
+            board.takePiece(move.to);
+
+        board.placePiece(
+            std::move(movedPiece),
+            move.from
+        );
+
+        // Undo castling rook movement
+        if (move.type == MoveType::CASTLING) {
+
+            int direction =
+                move.to.col > move.from.col ? 1 : -1;
+
+            Position rookFrom{
+                move.from.row,
+                move.from.col + direction
+            };
+
+            Position rookTo{
+                move.from.row,
+                direction == 1 ? 7 : 0
+            };
+
+            std::unique_ptr<Piece> rook =
+                board.takePiece(rookFrom);
+
+            board.placePiece(
+                std::move(rook),
+                rookTo
+            );
+
+            Piece* restoredRook =
+                board.getPiece(rookTo);
+
+            if (restoredRook != nullptr &&
+                secondaryPreviousState != nullptr) {
+
+                restoredRook->restoreState(
+                    *secondaryPreviousState
+                );
+            }
+        }
+
+        // Restore primary piece state
+        Piece* restoredPiece =
+            board.getPiece(move.from);
+
+        if (restoredPiece != nullptr &&
+            previousState != nullptr) {
+
+            restoredPiece->restoreState(
+                *previousState
+            );
+        }
+
+        // Restore captured piece
+        if (capturedPiece != nullptr) {
+            board.placePiece(
+                std::move(capturedPiece),
+                move.to
+            );
+        }
+
+        return false;
+    }
+
     if (move.type == MoveType::CASTLING) {
 
         int direction =

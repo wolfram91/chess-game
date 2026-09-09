@@ -8,6 +8,8 @@
 #include "Rook.h"
 #include "Bishop.h"
 #include "MoveValidator.h"
+#include "Knight.h"
+#include "Queen.h"
 
 void clearBoard(Board& board) {
     for (int row = 0; row < 8; row++) {
@@ -480,6 +482,550 @@ int main() {
                       fullCastleBoard.getPiece(Position{0, 7})
                   ) != nullptr)
               << std::endl;
+    
+    // Test Knight attack detection
+
+    Board knightBoard;
+
+    knightBoard.placePiece(
+        std::make_unique<Knight>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    bool knightAttack =
+        MoveValidator::isSquareAttacked(
+            knightBoard,
+            Position{6, 5},
+            Color::WHITE
+        );
+
+    bool nonKnightAttack =
+        MoveValidator::isSquareAttacked(
+            knightBoard,
+            Position{6, 6},
+            Color::WHITE
+        );
+
+    std::cout
+        << "Knight attacks (6,5): "
+        << knightAttack
+        << std::endl;
+
+    std::cout
+        << "Knight attacks (6,6): "
+        << nonKnightAttack
+        << std::endl;
+    
+    // Test Pawn attack detection
+
+    Board pawnBoard;
+
+    pawnBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{3, 3}
+    );
+
+    bool whitePawnAttack =
+        MoveValidator::isSquareAttacked(
+            pawnBoard,
+            Position{4, 4},
+            Color::WHITE
+        );
+
+    bool whitePawnNonAttack =
+        MoveValidator::isSquareAttacked(
+            pawnBoard,
+            Position{4, 3},
+            Color::WHITE
+        );
+
+    std::cout
+        << "White Pawn attacks (4,4): "
+        << whitePawnAttack
+        << std::endl;
+
+    std::cout
+        << "White Pawn attacks (4,3): "
+        << whitePawnNonAttack
+        << std::endl;
+
+    pawnBoard.placePiece(
+        std::make_unique<Pawn>(Color::BLACK),
+        Position{4, 4}
+    );
+
+    bool blackPawnAttack =
+        MoveValidator::isSquareAttacked(
+            pawnBoard,
+            Position{3, 3},
+            Color::BLACK
+        );
+
+    bool blackPawnNonAttack =
+        MoveValidator::isSquareAttacked(
+            pawnBoard,
+            Position{3, 4},
+            Color::BLACK
+        );
+
+    std::cout
+        << "Black Pawn attacks (3,3): "
+        << blackPawnAttack
+        << std::endl;
+
+    std::cout
+        << "Black Pawn attacks (3,4): "
+        << blackPawnNonAttack
+        << std::endl;
+    
+    // Test King attack detection
+
+    Board kingAttackBoard;
+
+    kingBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    bool kingAttack =
+        MoveValidator::isSquareAttacked(
+            kingBoard,
+            Position{5, 5},
+            Color::WHITE
+        );
+
+    bool kingNonAttack =
+        MoveValidator::isSquareAttacked(
+            kingBoard,
+            Position{6, 6},
+            Color::WHITE
+        );
+
+    std::cout
+        << "King attacks (5,5): "
+        << kingAttack
+        << std::endl;
+
+    std::cout
+        << "King attacks (6,6): "
+        << kingNonAttack
+        << std::endl;
+    
+    // Test sliding piece attack detection
+
+    // Rook
+    Board rookAttackBoard;
+
+    rookAttackBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    bool rookAttack =
+        MoveValidator::isSquareAttacked(
+            rookAttackBoard,
+            Position{4, 7},
+            Color::WHITE
+        );
+
+    bool rookNonAttack =
+        MoveValidator::isSquareAttacked(
+            rookAttackBoard,
+            Position{6, 6},
+            Color::WHITE
+        );
+
+    std::cout
+        << "Rook attacks (4,7): "
+        << rookAttack
+        << std::endl;
+
+    std::cout
+        << "Rook attacks (6,6): "
+        << rookNonAttack
+        << std::endl;
+
+
+    // Bishop
+    Board bishopAttackBoard;
+
+    bishopAttackBoard.placePiece(
+        std::make_unique<Bishop>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    bool bishopAttack =
+        MoveValidator::isSquareAttacked(
+            bishopAttackBoard,
+            Position{7, 7},
+            Color::WHITE
+        );
+
+    bool bishopNonAttack =
+        MoveValidator::isSquareAttacked(
+            bishopAttackBoard,
+            Position{6, 5},
+            Color::WHITE
+        );
+
+    std::cout
+        << "Bishop attacks (7,7): "
+        << bishopAttack
+        << std::endl;
+
+    std::cout
+        << "Bishop attacks (6,5): "
+        << bishopNonAttack
+        << std::endl;
+
+
+    // Queen
+    Board queenAttackBoard;
+
+    queenAttackBoard.placePiece(
+        std::make_unique<Queen>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    bool queenAttack =
+        MoveValidator::isSquareAttacked(
+            queenAttackBoard,
+            Position{4, 7},
+            Color::WHITE
+        );
+
+    bool queenNonAttack =
+        MoveValidator::isSquareAttacked(
+            queenAttackBoard,
+            Position{6, 5},
+            Color::WHITE
+        );
+
+    std::cout
+        << "Queen attacks (4,7): "
+        << queenAttack
+        << std::endl;
+
+    std::cout
+        << "Queen attacks (6,5): "
+        << queenNonAttack
+        << std::endl;
+
+    // Test blocked sliding piece attack
+
+    Board blockedRookBoard;
+
+    blockedRookBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    blockedRookBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{4, 6}
+    );
+
+    bool blockedRookAttack =
+        MoveValidator::isSquareAttacked(
+            blockedRookBoard,
+            Position{4, 7},
+            Color::WHITE
+        );
+
+    std::cout
+        << "Rook blocked at (4,6), attacks (4,7): "
+        << blockedRookAttack
+        << std::endl;
+
+    // Test King in check detection
+
+    // King attacked by Rook
+    Board checkBoard;
+
+    checkBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    checkBoard.placePiece(
+        std::make_unique<Rook>(Color::BLACK),
+        Position{4, 7}
+    );
+
+    bool kingInCheck =
+        MoveValidator::isKingInCheck(
+            checkBoard,
+            Color::WHITE
+        );
+
+    std::cout
+        << "White King in check by Rook: "
+        << kingInCheck
+        << std::endl;
+
+
+    // King not attacked
+    Board safeBoard;
+
+    safeBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    safeBoard.placePiece(
+        std::make_unique<Rook>(Color::BLACK),
+        Position{6, 7}
+    );
+
+    bool kingSafe =
+        MoveValidator::isKingInCheck(
+            safeBoard,
+            Color::WHITE
+        );
+
+    std::cout
+        << "White King not in check: "
+        << !kingSafe
+        << std::endl;
+
+
+    // Rook attack blocked
+    Board blockedCheckBoard;
+
+    blockedCheckBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    blockedCheckBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{4, 6}
+    );
+
+    blockedCheckBoard.placePiece(
+        std::make_unique<Rook>(Color::BLACK),
+        Position{4, 7}
+    );
+
+    bool blockedKingCheck =
+        MoveValidator::isKingInCheck(
+            blockedCheckBoard,
+            Color::WHITE
+        );
+
+    std::cout
+        << "White King protected by blocker: "
+        << !blockedKingCheck
+        << std::endl;
+
+    // Test that a move cannot leave the King in check
+
+    GameState illegalMoveState;
+
+    Board& illegalBoard =
+        illegalMoveState.getBoard();
+
+    // Clear the default starting position
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+            illegalBoard.removePiece(
+                Position{row, col}
+            );
+        }
+    }
+
+    // White King at (4,4)
+    illegalBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    // White Pawn protecting the King
+    illegalBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{4, 5}
+    );
+
+    // Black Rook attacking along the row
+    illegalBoard.placePiece(
+        std::make_unique<Rook>(Color::BLACK),
+        Position{4, 7}
+    );
+
+    // White tries to move Pawn away from the Rook's line
+    Move illegalMove{
+        Position{4, 5},
+        Position{5, 5},
+        MoveType::NORMAL
+    };
+
+    bool moveResult =
+        illegalMoveState.makeMove(illegalMove);
+
+    std::cout
+        << "Move exposing King rejected: "
+        << !moveResult
+        << std::endl;
+
+    std::cout
+        << "Pawn restored after rejection: "
+        << (illegalBoard.getPiece(
+                Position{4, 5}) != nullptr)
+        << std::endl;
+
+    std::cout
+        << "King still safe after rejection: "
+        << !MoveValidator::isKingInCheck(
+                illegalBoard,
+                Color::WHITE)
+        << std::endl;
+
+    // Test castling while in check
+
+    GameState castleCheckState;
+
+    Board& castleCheckBoard =
+        castleCheckState.getBoard();
+
+    // Clear board
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+            castleCheckBoard.removePiece(
+                Position{row, col}
+            );
+        }
+    }
+
+    // White King e1
+    castleCheckBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{0, 4}
+    );
+
+    // White Rook h1
+    castleCheckBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{0, 7}
+    );
+
+    // Black Rook attacks e1
+    castleCheckBoard.placePiece(
+        std::make_unique<Rook>(Color::BLACK),
+        Position{0, 0}
+    );
+
+    Move castleWhileInCheck{
+        Position{0, 4},
+        Position{0, 6},
+        MoveType::CASTLING
+    };
+
+    bool castleInCheckResult =
+        castleCheckState.makeMove(castleWhileInCheck);
+
+    std::cout
+        << "Castling while in check rejected: "
+        << !castleInCheckResult
+        << std::endl;
+
+    // Test castling through an attacked square
+
+    GameState castleThroughCheckState;
+
+    Board& castleThroughBoard =
+        castleThroughCheckState.getBoard();
+
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+            castleThroughBoard.removePiece(
+                Position{row, col}
+            );
+        }
+    }
+
+    // White King e1
+    castleThroughBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{0, 4}
+    );
+
+    // White Rook h1
+    castleThroughBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{0, 7}
+    );
+
+    // Black Rook attacks f1
+    castleThroughBoard.placePiece(
+        std::make_unique<Rook>(Color::BLACK),
+        Position{5, 5}
+    );
+
+    Move castleThroughCheck{
+        Position{0, 4},
+        Position{0, 6},
+        MoveType::CASTLING
+    };
+
+    bool castleThroughCheckResult =
+        castleThroughCheckState.makeMove(
+            castleThroughCheck
+        );
+
+    std::cout
+        << "Castling through check rejected: "
+        << !castleThroughCheckResult
+        << std::endl;
+
+    // Test castling onto an attacked square
+
+    GameState castleDestinationState;
+
+    Board& castleDestinationBoard =
+        castleDestinationState.getBoard();
+
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+            castleDestinationBoard.removePiece(
+                Position{row, col}
+            );
+        }
+    }
+
+    // White King e1
+    castleDestinationBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{0, 4}
+    );
+
+    // White Rook h1
+    castleDestinationBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{0, 7}
+    );
+
+    // Black Rook attacks g1
+    castleDestinationBoard.placePiece(
+        std::make_unique<Rook>(Color::BLACK),
+        Position{6, 6}
+    );
+
+    Move castleOntoCheck{
+        Position{0, 4},
+        Position{0, 6},
+        MoveType::CASTLING
+    };
+
+    bool castleDestinationResult =
+        castleDestinationState.makeMove(
+            castleOntoCheck
+        );
+
+    std::cout
+        << "Castling onto attacked square rejected: "
+        << !castleDestinationResult
+        << std::endl;
+
     
     return 0;
 }

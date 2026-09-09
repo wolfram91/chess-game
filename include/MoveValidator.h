@@ -12,6 +12,23 @@ public:
         const Move& move
     );
 
+    static bool isSquareAttacked(
+        const Board& board,
+        Position position,
+        Color attackingColor
+    );
+
+    static bool isKingInCheck(
+        const Board& board,
+        Color color
+    );
+
+    static bool leavesKingInCheck(
+        Board& board,
+        const Move& move,
+        Color movingColor
+    );
+
 private:
     static bool isPathClear(
         const Board& board,
@@ -23,6 +40,13 @@ private:
         const Board& board,
         const Move& move
     );
+
+    static Position findKing(
+        const Board& board,
+        Color color
+    );
+
+    static Color oppositeColor(Color color);
 };
 
 #endif

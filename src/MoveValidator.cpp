@@ -1,6 +1,7 @@
 #include "MoveValidator.h"
 #include "King.h"
 #include "Rook.h"
+#include "Knight.h"
 #include <cstdlib>
 
 bool MoveValidator::isValidMove(
@@ -150,7 +151,90 @@ bool MoveValidator::isValidCastling(
         return false;
     }
 
+    Color attackingColor =
+        oppositeColor(king->getColor());
+
+    if (isSquareAttacked(
+            board,
+            kingPosition,
+            attackingColor)) {
+        return false;
+    }
+
+    if (isSquareAttacked(
+            board,
+            betweenOne,
+            attackingColor)) {
+        return false;
+    }
+
+    if (isSquareAttacked(
+            board,
+            betweenTwo,
+            attackingColor)) {
+        return false;
+    }
+
     return true;
+}
+
+bool MoveValidator::isSquareAttacked(
+    const Board& board,
+    Position position,
+    Color attackingColor
+) {
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+
+            Position from{row, col};
+
+            Piece* piece = board.getPiece(from);
+
+            if (piece == nullptr) {
+                continue;
+            }
+
+            if (piece->getColor() != attackingColor) {
+                continue;
+            }
+
+            Pawn* pawn = dynamic_cast<Pawn*>(piece);
+
+            if (pawn != nullptr) {
+                if (pawn->canCapture(from, position)) {
+                    return true;
+                }
+
+                continue;
+            }
+
+            if (piece->canJump()) {
+                if (piece->isValidMovement(from, position)) {
+                    return true;
+                }
+
+                continue;
+            }
+
+            if (piece->isValidMovement(from, position)) {
+                if (isPathClear(board, from, position)) {
+                    return true;
+                }
+            }
+
+            King* king = dynamic_cast<King*>(piece);
+
+            if (king != nullptr) {
+                if (king->isValidMovement(from, position)) {
+                    return true;
+                }
+
+                continue;
+            }
+        }
+    }
+
+    return false;
 }
 
 bool MoveValidator::isPathClear(
@@ -193,4 +277,64 @@ bool MoveValidator::isPathClear(
     }
 
     return true;
+}
+
+Position MoveValidator::findKing(
+    const Board& board,
+    Color color
+) {
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+
+            Position position{row, col};
+
+            Piece* piece =
+                board.getPiece(position);
+
+            if (piece == nullptr) {
+                continue;
+            }
+
+            if (piece->getColor() != color) {
+                continue;
+            }
+
+            King* king =
+                dynamic_cast<King*>(piece);
+
+            if (king != nullptr) {
+                return position;
+            }
+        }
+    }
+
+    return Position{-1, -1};
+}
+
+bool MoveValidator::isKingInCheck(
+    const Board& board,
+    Color color
+) {
+    Position kingPosition =
+        findKing(board, color);
+
+    if (!board.isValidPosition(kingPosition)) {
+        return false;
+    }
+
+    Color attackingColor = oppositeColor(color);
+
+    return isSquareAttacked(
+        board,
+        kingPosition,
+        attackingColor
+    );
+}
+
+Color MoveValidator::oppositeColor(Color color) {
+    if (color == Color::WHITE) {
+        return Color::BLACK;
+    }
+
+    return Color::WHITE;
 }
