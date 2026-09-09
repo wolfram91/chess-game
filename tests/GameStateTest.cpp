@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <vector>
 
 #include "GameState.h"
 #include "Pawn.h"
@@ -1026,6 +1027,475 @@ int main() {
         << !castleDestinationResult
         << std::endl;
 
+    // Test Knight pseudo-legal move generation
+
+    Board knightMoveBoard;
+
+    knightMoveBoard.placePiece(
+        std::make_unique<Knight>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    std::vector<Move> knightMoves =
+        MoveValidator::getPseudoLegalMoves(
+            knightMoveBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "Knight moves from (4,4): "
+        << knightMoves.size()
+        << std::endl;
+
+    // Test Knight moves with occupied destination squares
+
+    Board knightCaptureBoard;
+
+    knightCaptureBoard.placePiece(
+        std::make_unique<Knight>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    // Friendly piece blocks this destination
+    knightCaptureBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{6, 5}
+    );
+
+    // Enemy piece can be captured
+    knightCaptureBoard.placePiece(
+        std::make_unique<Pawn>(Color::BLACK),
+        Position{6, 3}
+    );
+
+    std::vector<Move> knightCaptureMoves =
+        MoveValidator::getPseudoLegalMoves(
+            knightCaptureBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "Knight moves with friendly blocker and enemy target: "
+        << knightCaptureMoves.size()
+        << std::endl;
+
+    // Test Rook pseudo-legal move generation
+
+    Board rookMoveBoard;
+
+    rookMoveBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    std::vector<Move> rookMoves =
+        MoveValidator::getPseudoLegalMoves(
+            rookMoveBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "Rook moves from (4,4): "
+        << rookMoves.size()
+        << std::endl;
+
+    // Test Rook move generation with a blocker
+
+    Board blockedRookMoveBoard;
+
+    blockedRookMoveBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    blockedRookMoveBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{4, 6}
+    );
+
+    std::vector<Move> blockedRookMoves =
+        MoveValidator::getPseudoLegalMoves(
+            blockedRookMoveBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "Rook moves with blocker at (4,6): "
+        << blockedRookMoves.size()
+        << std::endl;
     
+    // Test Rook move generation with an enemy piece
+
+    Board rookCaptureBoard;
+
+    rookCaptureBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    rookCaptureBoard.placePiece(
+        std::make_unique<Pawn>(Color::BLACK),
+        Position{4, 6}
+    );
+
+    std::vector<Move> rookCaptureMoves =
+        MoveValidator::getPseudoLegalMoves(
+            rookCaptureBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "Rook moves with enemy at (4,6): "
+        << rookCaptureMoves.size()
+        << std::endl;
+
+    // Test Bishop pseudo-legal move generation
+
+    Board bishopMoveBoard;
+
+    bishopMoveBoard.placePiece(
+        std::make_unique<Bishop>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    std::vector<Move> bishopMoves =
+        MoveValidator::getPseudoLegalMoves(
+            bishopMoveBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "Bishop moves from (4,4): "
+        << bishopMoves.size()
+        << std::endl;
+
+    // Test Queen pseudo-legal move generation
+
+    Board queenMoveBoard;
+
+    queenMoveBoard.placePiece(
+        std::make_unique<Queen>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    std::vector<Move> queenMoves =
+        MoveValidator::getPseudoLegalMoves(
+            queenMoveBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "Queen moves from (4,4): "
+        << queenMoves.size()
+        << std::endl;
+
+    // Test White Pawn pseudo-legal moves from starting position
+
+    Board pawnMoveBoard;
+
+    pawnMoveBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{1, 4}
+    );
+
+    std::vector<Move> pawnMoves =
+        MoveValidator::getPseudoLegalMoves(
+            pawnMoveBoard,
+            Position{1, 4}
+        );
+
+    std::cout
+        << "White Pawn moves from starting position: "
+        << pawnMoves.size()
+        << std::endl;
+
+    // Test Pawn blocked directly ahead
+
+    Board blockedPawnBoard;
+
+    blockedPawnBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{1, 4}
+    );
+
+    blockedPawnBoard.placePiece(
+        std::make_unique<Pawn>(Color::BLACK),
+        Position{2, 4}
+    );
+
+    std::vector<Move> blockedPawnMoves =
+        MoveValidator::getPseudoLegalMoves(
+            blockedPawnBoard,
+            Position{1, 4}
+        );
+
+    std::cout
+        << "Blocked Pawn moves: "
+        << blockedPawnMoves.size()
+        << std::endl;
+
+    // Test Pawn diagonal captures
+
+    Board pawnCaptureBoard;
+
+    pawnCaptureBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    pawnCaptureBoard.placePiece(
+        std::make_unique<Pawn>(Color::BLACK),
+        Position{5, 3}
+    );
+
+    pawnCaptureBoard.placePiece(
+        std::make_unique<Pawn>(Color::BLACK),
+        Position{5, 5}
+    );
+
+    std::vector<Move> pawnCaptureMoves =
+        MoveValidator::getPseudoLegalMoves(
+            pawnCaptureBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "Pawn moves with two enemy diagonals: "
+        << pawnCaptureMoves.size()
+        << std::endl;
+
+    // Test Black Pawn pseudo-legal moves from starting position
+
+    Board blackPawnBoard;
+
+    blackPawnBoard.placePiece(
+        std::make_unique<Pawn>(Color::BLACK),
+        Position{6, 4}
+    );
+
+    std::vector<Move> blackPawnMoves =
+        MoveValidator::getPseudoLegalMoves(
+            blackPawnBoard,
+            Position{6, 4}
+        );
+
+    std::cout
+        << "Black Pawn moves from starting position: "
+        << blackPawnMoves.size()
+        << std::endl;
+
+    // Test Pawn away from starting rank
+
+    Board advancedPawnBoard;
+
+    advancedPawnBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    std::vector<Move> advancedPawnMoves =
+        MoveValidator::getPseudoLegalMoves(
+            advancedPawnBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "White Pawn moves from (4,4): "
+        << advancedPawnMoves.size()
+        << std::endl;
+
+    // Test King pseudo-legal moves from center
+
+    Board kingMoveBoard;
+
+    kingMoveBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    std::vector<Move> kingMoves =
+        MoveValidator::getPseudoLegalMoves(
+            kingMoveBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "King moves from (4,4): "
+        << kingMoves.size()
+        << std::endl;
+
+    // Test King pseudo-legal moves from corner
+
+    Board cornerKingBoard;
+
+    cornerKingBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{0, 0}
+    );
+
+    std::vector<Move> cornerKingMoves =
+        MoveValidator::getPseudoLegalMoves(
+            cornerKingBoard,
+            Position{0, 0}
+        );
+
+    std::cout
+        << "King moves from (0,0): "
+        << cornerKingMoves.size()
+        << std::endl;
+
+    // Test King with friendly piece blocking
+
+    Board blockedKingBoard;
+
+    blockedKingBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{4, 4}
+    );
+
+    blockedKingBoard.placePiece(
+        std::make_unique<Pawn>(Color::WHITE),
+        Position{3, 3}
+    );
+
+    std::vector<Move> blockedKingMoves =
+        MoveValidator::getPseudoLegalMoves(
+            blockedKingBoard,
+            Position{4, 4}
+        );
+
+    std::cout
+        << "King moves with friendly blocker: "
+        << blockedKingMoves.size()
+        << std::endl;
+
+    // Test legal move generation: safe move
+
+    Board legalMoveBoard;
+
+    legalMoveBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{0, 4}
+    );
+
+    legalMoveBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{1, 4}
+    );
+
+    std::vector<Move> legalMoves =
+        MoveValidator::getLegalMoves(
+            legalMoveBoard,
+            Position{1, 4}
+        );
+
+    std::cout
+        << "Safe Rook legal moves: "
+        << legalMoves.size()
+        << std::endl;
+
+    // Test legal move generation: pinned Rook
+
+    Board pinnedRookBoard;
+
+    pinnedRookBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{0, 4}
+    );
+
+    pinnedRookBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{1, 4}
+    );
+
+    pinnedRookBoard.placePiece(
+        std::make_unique<Rook>(Color::BLACK),
+        Position{7, 4}
+    );
+
+    std::vector<Move> pinnedRookMoves =
+        MoveValidator::getLegalMoves(
+            pinnedRookBoard,
+            Position{1, 4}
+        );
+
+    std::cout
+        << "Pinned Rook legal moves: "
+        << pinnedRookMoves.size()
+        << std::endl;
+
+    // Test castling in pseudo-legal move generation
+
+    Board kingCastlingBoard;
+
+    kingCastlingBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{0, 4}
+    );
+
+    kingCastlingBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{0, 7}
+    );
+
+    std::vector<Move> kingCastlingMoves =
+        MoveValidator::getPseudoLegalMoves(
+            kingCastlingBoard,
+            Position{0, 4}
+        );
+
+    int castlingMoves = 0;
+
+    for (const Move& move : kingCastlingMoves) {
+        if (move.type == MoveType::CASTLING) {
+            castlingMoves++;
+        }
+    }
+
+    std::cout
+        << "King castling moves generated: "
+        << castlingMoves
+        << std::endl;
+
+    // Test blocked castling is not generated
+
+    Board blockedCastlingBoard;
+
+    blockedCastlingBoard.placePiece(
+        std::make_unique<King>(Color::WHITE),
+        Position{0, 4}
+    );
+
+    blockedCastlingBoard.placePiece(
+        std::make_unique<Rook>(Color::WHITE),
+        Position{0, 7}
+    );
+
+    blockedCastlingBoard.placePiece(
+        std::make_unique<Bishop>(Color::WHITE),
+        Position{0, 5}
+    );
+
+    std::vector<Move> blockedCastlingMoves =
+        MoveValidator::getPseudoLegalMoves(
+            blockedCastlingBoard,
+            Position{0, 4}
+        );
+
+    int blockedCastlingCount = 0;
+
+    for (const Move& move : blockedCastlingMoves) {
+        if (move.type == MoveType::CASTLING) {
+            blockedCastlingCount++;
+        }
+    }
+
+    std::cout
+        << "Blocked castling moves generated: "
+        << blockedCastlingCount
+        << std::endl;
+
+    return 0;
+
     return 0;
 }

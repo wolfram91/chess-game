@@ -5,6 +5,8 @@
 #include "Move.h"
 #include "Pawn.h"
 
+#include <vector>
+
 class MoveValidator {
 public:
     static bool isValidMove(
@@ -29,6 +31,16 @@ public:
         Color movingColor
     );
 
+    static std::vector<Move> getPseudoLegalMoves(
+        const Board& board,
+        Position from
+    );
+
+    static std::vector<Move> getLegalMoves(
+        Board& board,
+        Position from
+    );
+
 private:
     static bool isPathClear(
         const Board& board,
@@ -47,6 +59,11 @@ private:
     );
 
     static Color oppositeColor(Color color);
+
+    static bool leavesKingInCheck(
+        Board& board,
+        const Move& move
+    );
 };
 
 #endif
