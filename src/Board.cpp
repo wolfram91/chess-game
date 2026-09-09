@@ -123,6 +123,69 @@ bool Board::executeMove(const Move& move) {
     return true;
 }
 
+void Board::getCastlingRookPositions(
+    const Move& move,
+    Position& rookFrom,
+    Position& rookTo
+) const {
+    int direction;
+
+    if (move.to.col > move.from.col) {
+        direction = 1;
+    } else {
+        direction = -1;
+    }
+
+    rookFrom = Position{
+        move.from.row,
+        direction == 1 ? 7 : 0
+    };
+
+    rookTo = Position{
+        move.from.row,
+        move.from.col + direction
+    };
+}
+
+bool Board::executeCastling(const Move& move) {
+    Position kingFrom = move.from;
+    Position kingTo = move.to;
+
+    Position rookFrom;
+    Position rookTo;
+
+    getCastlingRookPositions(
+        move,
+        rookFrom,
+        rookTo
+    );
+
+    if (!isValidPosition(kingFrom) ||
+        !isValidPosition(kingTo) ||
+        !isValidPosition(rookFrom) ||
+        !isValidPosition(rookTo)) {
+        return false;
+    }
+
+    if (squares[kingFrom.row][kingFrom.col] == nullptr ||
+        squares[rookFrom.row][rookFrom.col] == nullptr) {
+        return false;
+    }
+
+    if (squares[kingTo.row][kingTo.col] != nullptr ||
+        squares[rookTo.row][rookTo.col] != nullptr) {
+        return false;
+    }
+
+    squares[kingTo.row][kingTo.col] =
+        std::move(squares[kingFrom.row][kingFrom.col]);
+
+    squares[rookTo.row][rookTo.col] =
+        std::move(squares[rookFrom.row][rookFrom.col]);
+
+    return true;
+}
+
 void Board::setup() {
 
     // White back rank

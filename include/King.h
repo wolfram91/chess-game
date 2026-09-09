@@ -18,6 +18,8 @@ public:
 
     void onMove() override;
 
+    bool hasMoved() const;
+
     std::unique_ptr<PieceState> saveState() const override;
 
     void restoreState(

@@ -24,6 +24,10 @@ void King::onMove() {
     hasMovedFlag = true;
 }
 
+bool King::hasMoved() const {
+    return hasMovedFlag;
+}
+
 std::unique_ptr<PieceState> King::saveState() const {
     return std::make_unique<KingState>(hasMovedFlag);
 }

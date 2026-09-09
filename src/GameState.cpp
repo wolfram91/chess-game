@@ -54,15 +54,46 @@ bool GameState::makeMove(const Move& move) {
     // Save the piece's state BEFORE the move.
     std::unique_ptr<PieceState> previousState =
         piece->saveState();
+    
+    std::unique_ptr<PieceState> secondaryPreviousState = nullptr;
+
+    Piece* secondaryPiece = nullptr;
+
+    if (move.type == MoveType::CASTLING) {
+
+        int direction =
+            move.to.col > move.from.col ? 1 : -1;
+
+        Position rookFrom{
+            move.from.row,
+            direction == 1 ? 7 : 0
+        };
+
+        secondaryPiece = board.getPiece(rookFrom);
+
+        if (secondaryPiece == nullptr) {
+            return false;
+        }
+
+        secondaryPreviousState =
+            secondaryPiece->saveState();
+    }
 
     // Save the captured piece before executing the move.
     std::unique_ptr<Piece> capturedPiece =
         board.takePiece(move.to);
 
     // Apply the move.
-    if (!board.executeMove(move)) {
+    bool moveExecuted;
 
-        // Restore the captured piece if execution failed.
+    if (move.type == MoveType::CASTLING) {
+        moveExecuted = board.executeCastling(move);
+    } else {
+        moveExecuted = board.executeMove(move);
+    }
+
+    if (!moveExecuted) {
+
         if (capturedPiece != nullptr) {
             board.placePiece(
                 std::move(capturedPiece),
@@ -76,11 +107,29 @@ bool GameState::makeMove(const Move& move) {
     // Tell the piece that its move was successful.
     piece->onMove();
 
+    if (move.type == MoveType::CASTLING) {
+
+        int direction =
+            move.to.col > move.from.col ? 1 : -1;
+
+        Position rookTo{
+            move.from.row,
+            move.from.col + direction
+        };
+
+        Piece* rook = board.getPiece(rookTo);
+
+        if (rook != nullptr) {
+            rook->onMove();
+        }
+    }
+
     // Create a record of the move.
     MoveRecord record{
         move,
         std::move(capturedPiece),
-        std::move(previousState)
+        std::move(previousState),
+        std::move(secondaryPreviousState)
     };
 
     // Store the record in history.
@@ -116,6 +165,46 @@ bool GameState::undoMove() {
             std::move(piece),
             record.move.from)) {
         return false;
+    }
+
+    if (record.move.type == MoveType::CASTLING) {
+
+        int direction =
+            record.move.to.col > record.move.from.col ? 1 : -1;
+
+        Position rookFrom{
+            record.move.from.row,
+            record.move.from.col + direction
+        };
+
+        Position rookTo{
+            record.move.from.row,
+            direction == 1 ? 7 : 0
+        };
+
+        std::unique_ptr<Piece> rook =
+            board.takePiece(rookFrom);
+
+        if (rook == nullptr) {
+            return false;
+        }
+
+        if (!board.placePiece(
+                std::move(rook),
+                rookTo)) {
+            return false;
+        }
+
+        Piece* restoredRook =
+            board.getPiece(rookTo);
+
+        if (restoredRook != nullptr &&
+            record.secondaryPreviousState != nullptr) {
+
+            restoredRook->restoreState(
+                *record.secondaryPreviousState
+            );
+        }
     }
 
     // Get the piece we just restored.

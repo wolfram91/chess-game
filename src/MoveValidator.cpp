@@ -1,10 +1,16 @@
 #include "MoveValidator.h"
+#include "King.h"
+#include "Rook.h"
 #include <cstdlib>
 
 bool MoveValidator::isValidMove(
     const Board& board,
     const Move& move
 ) {
+    if (move.type == MoveType::CASTLING) {
+        return isValidCastling(board, move);
+    }
+
     Position from = move.from;
     Position to = move.to;
 
@@ -78,6 +84,73 @@ bool MoveValidator::isValidMove(
     }
 
     return isPathClear(board, from, to);
+}
+
+bool MoveValidator::isValidCastling(
+    const Board& board,
+    const Move& move
+) {
+    Position kingPosition = move.from;
+    Position destination = move.to;
+
+    Piece* piece = board.getPiece(kingPosition);
+
+    King* king = dynamic_cast<King*>(piece);
+
+    if (king == nullptr) {
+        return false;
+    }
+
+    if (king->hasMoved()) {
+        return false;
+    }
+
+    int row = kingPosition.row;
+    int direction;
+
+    if (destination.col > kingPosition.col) {
+        direction = 1;
+    } else {
+        direction = -1;
+    }
+
+    Position rookPosition{
+        row,
+        direction == 1 ? 7 : 0
+    };
+
+    Piece* rookPiece = board.getPiece(rookPosition);
+
+    Rook* rook = dynamic_cast<Rook*>(rookPiece);
+
+    if (rook == nullptr) {
+        return false;
+    }
+
+    if (rook->getColor() != king->getColor()) {
+        return false;
+    }
+
+    if (rook->hasMoved()) {
+        return false;
+    }
+
+    Position betweenOne{
+        row,
+        kingPosition.col + direction
+    };
+
+    Position betweenTwo{
+        row,
+        kingPosition.col + 2 * direction
+    };
+
+    if (!board.isEmpty(betweenOne) ||
+        !board.isEmpty(betweenTwo)) {
+        return false;
+    }
+
+    return true;
 }
 
 bool MoveValidator::isPathClear(

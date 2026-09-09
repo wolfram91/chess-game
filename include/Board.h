@@ -10,6 +10,12 @@ class Board {
 private:
     std::unique_ptr<Piece> squares[8][8];
 
+    void getCastlingRookPositions(
+        const Move& move,
+        Position& rookFrom,
+        Position& rookTo
+    ) const;
+
 public:
     Board();
 
@@ -36,6 +42,8 @@ public:
     );
 
     bool executeMove(const Move& move);
+
+    bool executeCastling(const Move& move);
 };
 
 #endif

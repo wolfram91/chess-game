@@ -18,6 +18,11 @@ private:
         Position from,
         Position to
     );
+
+    static bool isValidCastling(
+        const Board& board,
+        const Move& move
+    );
 };
 
 #endif
